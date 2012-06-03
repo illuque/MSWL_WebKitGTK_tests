@@ -37,6 +37,8 @@
 
 static void destroyWindowCb(GtkWidget* widget, GtkWidget* window);
 static gboolean closeWebViewCb(WebKitWebView* webView, GtkWidget* window);
+static void loadStatusCb(WebKitWebView *web_view, GParamSpec *pspec, void* context);
+static void handleLoadFinished(WebKitWebView *web_view, void* context);
 
 int main(int argc, char* argv[])
 {
@@ -62,7 +64,8 @@ int main(int argc, char* argv[])
     g_signal_connect(webView, "close-web-view", G_CALLBACK(closeWebViewCb), main_window);
 
     // Space for WebKit specific callbacks
-    
+    g_signal_connect(webView, "notify::load-status",
+            G_CALLBACK(loadStatusCb), NULL);
 
     // Put the scrollable area into the main window
     gtk_container_add(GTK_CONTAINER(main_window), scrolledWindow);
@@ -93,5 +96,26 @@ static gboolean closeWebViewCb(WebKitWebView* webView, GtkWidget* window)
 {
     gtk_widget_destroy(window);
     return TRUE;
+}
+
+
+// Implement the listener, handling each possible load status
+static void loadStatusCb(WebKitWebView *web_view, GParamSpec *pspec, void* context)
+{
+    WebKitLoadStatus status = webkit_web_view_get_load_status (web_view);
+    GObject *object = G_OBJECT (web_view);
+
+    g_object_freeze_notify (object);
+        
+    if (status == WEBKIT_LOAD_FINISHED)
+        handleLoadFinished(web_view, context);
+            
+    g_object_thaw_notify (object);
+}
+
+
+static void handleLoadFinished(WebKitWebView *web_view, void* context)
+{
+    printf("Soy el handleLoadFinished\n");
 }
 
