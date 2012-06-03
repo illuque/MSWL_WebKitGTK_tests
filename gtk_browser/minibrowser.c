@@ -61,11 +61,14 @@ int main(int argc, char* argv[])
     g_signal_connect(main_window, "destroy", G_CALLBACK(destroyWindowCb), NULL);
     g_signal_connect(webView, "close-web-view", G_CALLBACK(closeWebViewCb), main_window);
 
+    // Space for WebKit specific callbacks
+    
+
     // Put the scrollable area into the main window
     gtk_container_add(GTK_CONTAINER(main_window), scrolledWindow);
 
     // Load a web page into the browser instance
-    webkit_web_view_load_uri(webView, "http://www.google.com/");
+    webkit_web_view_load_uri(webView, "https://docs.google.com/document/d/1glr_cr4oZ8heIg9BVHq1ptUwk8wB_uMVIN9zKsPQeaU/edit");
 
     // Make sure that when the browser area becomes visible, it will get mouse
     // and keyboard events
