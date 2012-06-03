@@ -116,6 +116,24 @@ static void loadStatusCb(WebKitWebView *web_view, GParamSpec *pspec, void* conte
 
 static void handleLoadFinished(WebKitWebView *web_view, void* context)
 {
-    printf("Soy el handleLoadFinished\n");
+    int i;
+    
+    printf("handleLoadFinished\n");
+    WebKitDOMDocument *document =
+            webkit_web_view_get_dom_document(WEBKIT_WEB_VIEW(web_view));
+    WebKitDOMNodeList *elements =
+            webkit_dom_document_get_elements_by_tag_name(document, "*");
+    gulong element_count = webkit_dom_node_list_get_length(elements);
+
+    // Print all tag names persent in the document
+    for (i = 0; i < element_count; i++)
+    {
+        WebKitDOMNode *element = webkit_dom_node_list_item(elements, i);
+        printf("tag name: %s\n",
+            webkit_dom_element_get_tag_name((WebKitDOMElement*)element));
+            
+        WebKitDOMHTMLElement* htmlElement = (WebKitDOMHTMLElement*)element;
+        printf("   %s", webkit_dom_html_element_get_inner_text(htmlElement));
+    }
 }
 
