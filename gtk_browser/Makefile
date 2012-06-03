@@ -7,3 +7,7 @@ all: minibrowser
 minibrowser:
 	$(CC) -o minibrowser minibrowser.c $(INCLUDES) $(FLAGS)
 
+clean: minibrowser
+	rm minibrowser
+	rm *~
+
